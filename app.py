@@ -71,15 +71,16 @@ RATING_SCORE_MAP = {
 }
 
 BLUE = "#2563EB"
-PURPLE = "#7C3AED"
-PINK = "#DB2777"
-TEAL = "#0F766E"
-SLATE = "#0F172A"
-MUTED = "#64748B"
+BLUE_DARK = "#1D4ED8"
+BLUE_SOFT = "#EFF6FF"
+BLACK = "#0F172A"
+GRAY = "#64748B"
+BORDER = "#E2E8F0"
+BG = "#F8FAFC"
 
 
 # ============================================================
-# GLOBAL CSS
+# CSS
 # ============================================================
 
 st.markdown(
@@ -93,13 +94,12 @@ html, body, [class*="css"] {
 
 [data-testid="stAppViewContainer"] {
     background:
-        radial-gradient(circle at 12% 8%, rgba(37,99,235,0.10), transparent 28%),
-        radial-gradient(circle at 88% 10%, rgba(219,39,119,0.10), transparent 30%),
-        linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+        radial-gradient(circle at 15% 8%, rgba(37,99,235,0.05), transparent 28%),
+        linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 [data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    background: #ffffff !important;
     border-right: 1px solid #e2e8f0;
 }
 
@@ -108,10 +108,10 @@ html, body, [class*="css"] {
 }
 
 .block-container {
-    padding-top: 1.25rem !important;
-    padding-left: 3rem !important;
-    padding-right: 3rem !important;
-    max-width: 1320px !important;
+    padding-top: 1.35rem !important;
+    padding-left: 2.7rem !important;
+    padding-right: 2.7rem !important;
+    max-width: 1360px !important;
 }
 
 #MainMenu, footer, header {
@@ -119,20 +119,19 @@ html, body, [class*="css"] {
 }
 
 .hero {
-    padding: 3.2rem 3.6rem;
-    border-radius: 28px;
+    padding: 3rem 3.25rem;
+    border-radius: 26px;
     background:
-        radial-gradient(circle at 15% 20%, rgba(37,99,235,0.16), transparent 35%),
-        radial-gradient(circle at 85% 25%, rgba(219,39,119,0.17), transparent 36%),
-        linear-gradient(135deg, #ffffff 0%, #f8fbff 45%, #fdf2f8 100%);
-    border: 1px solid rgba(148,163,184,0.22);
-    box-shadow: 0 24px 60px rgba(15,23,42,0.10);
-    margin-bottom: 1.4rem;
+        radial-gradient(circle at 12% 18%, rgba(37,99,235,0.10), transparent 28%),
+        linear-gradient(135deg, #ffffff 0%, #f8fbff 55%, #eef6ff 100%);
+    border: 1px solid rgba(148,163,184,0.20);
+    box-shadow: 0 24px 60px rgba(15,23,42,0.08);
+    margin-bottom: 1.2rem;
 }
 
 .hero-pill {
     display: inline-block;
-    padding: .45rem .8rem;
+    padding: .45rem .85rem;
     border-radius: 999px;
     background: #eff6ff;
     border: 1px solid #bfdbfe;
@@ -141,11 +140,11 @@ html, body, [class*="css"] {
     letter-spacing: .12em;
     font-size: .72rem;
     text-transform: uppercase;
-    margin-bottom: 1.1rem;
+    margin-bottom: 1rem;
 }
 
 .hero-title {
-    font-size: clamp(2.4rem, 5vw, 4.8rem);
+    font-size: clamp(2.35rem, 4.8vw, 4.45rem);
     line-height: 0.98;
     font-weight: 800;
     letter-spacing: -0.06em;
@@ -154,40 +153,40 @@ html, body, [class*="css"] {
 }
 
 .gradient-text {
-    background: linear-gradient(90deg, #2563eb, #7c3aed, #db2777);
+    background: linear-gradient(90deg, #1d4ed8, #2563eb, #3b82f6);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 .hero-subtitle {
-    margin-top: 1.3rem;
+    margin-top: 1.15rem;
     max-width: 760px;
     color: #475569;
-    line-height: 1.75;
-    font-size: 1.02rem;
+    line-height: 1.72;
+    font-size: 1rem;
 }
 
 .chip-row {
     display: flex;
     gap: .65rem;
     flex-wrap: wrap;
-    margin-top: 1.25rem;
+    margin-top: 1.15rem;
 }
 
 .chip {
     display: inline-block;
     padding: .45rem .8rem;
-    background: rgba(255,255,255,0.72);
-    border: 1px solid #e2e8f0;
+    background: rgba(255,255,255,0.85);
+    border: 1px solid #dbeafe;
     border-radius: 999px;
-    color: #334155;
+    color: #1e3a8a;
     font-size: .78rem;
     font-weight: 700;
 }
 
 .section-title {
-    margin-top: .5rem;
-    font-size: 1.75rem;
+    margin-top: .45rem;
+    font-size: 1.78rem;
     font-weight: 800;
     letter-spacing: -0.03em;
     color: #0f172a;
@@ -204,17 +203,18 @@ html, body, [class*="css"] {
 
 .section-subtitle {
     color: #64748b;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.15rem;
     font-size: .96rem;
 }
 
 .metric-card {
     background: #ffffff;
     border: 1px solid #e5e7eb;
+    border-top: 4px solid #2563eb;
     border-radius: 18px;
-    padding: 1.15rem 1.2rem;
-    box-shadow: 0 10px 28px rgba(15,23,42,.07);
-    min-height: 112px;
+    padding: 1.1rem 1.15rem;
+    box-shadow: 0 12px 30px rgba(15,23,42,.06);
+    min-height: 116px;
 }
 
 .metric-label {
@@ -226,52 +226,45 @@ html, body, [class*="css"] {
 }
 
 .metric-value {
-    margin-top: .55rem;
+    margin-top: .52rem;
     color: #0f172a;
-    font-size: 1.85rem;
+    font-size: 1.9rem;
     font-weight: 800;
     letter-spacing: -0.04em;
 }
 
 .metric-sub {
-    margin-top: .35rem;
+    margin-top: .36rem;
     display: inline-block;
     padding: .24rem .55rem;
     border-radius: 999px;
-    background: #dcfce7;
-    color: #166534;
+    background: #eff6ff;
+    color: #1d4ed8;
     font-size: .72rem;
     font-weight: 700;
 }
 
-.card {
-    background: rgba(255,255,255,0.86);
-    border: 1px solid #e2e8f0;
-    border-radius: 22px;
-    padding: 1.25rem;
-    box-shadow: 0 14px 38px rgba(15,23,42,.07);
-}
-
 .insight {
-    background: linear-gradient(135deg, #eff6ff 0%, #fdf2f8 100%);
+    background: #ffffff;
     border: 1px solid #dbeafe;
     border-left: 5px solid #2563eb;
     border-radius: 16px;
     padding: 1rem 1.1rem;
     color: #334155;
-    line-height: 1.65;
-    font-size: .92rem;
+    line-height: 1.68;
+    font-size: .93rem;
+    box-shadow: 0 10px 24px rgba(15,23,42,.05);
 }
 
 .success-box {
-    background: #ecfdf5;
-    border: 1px solid #bbf7d0;
-    border-left: 5px solid #22c55e;
+    background: #f8fbff;
+    border: 1px solid #bfdbfe;
+    border-left: 5px solid #2563eb;
     border-radius: 16px;
     padding: 1rem 1.1rem;
-    color: #166534;
-    line-height: 1.65;
-    font-size: .92rem;
+    color: #1e3a8a;
+    line-height: 1.68;
+    font-size: .93rem;
 }
 
 .warn-box {
@@ -281,39 +274,40 @@ html, body, [class*="css"] {
     border-radius: 16px;
     padding: 1rem 1.1rem;
     color: #9a3412;
-    line-height: 1.65;
-    font-size: .92rem;
+    line-height: 1.68;
+    font-size: .93rem;
 }
 
 .rec-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 20px;
-    padding: 1.2rem 1.25rem;
-    box-shadow: 0 12px 32px rgba(15,23,42,.07);
+    border-left: 4px solid #2563eb;
+    border-radius: 18px;
+    padding: 1.1rem 1.15rem;
+    box-shadow: 0 12px 28px rgba(15,23,42,.05);
     margin-bottom: 1rem;
 }
 
 .rec-title {
     color: #0f172a;
-    font-size: 1.05rem;
+    font-size: 1.03rem;
     font-weight: 800;
     margin-bottom: .35rem;
 }
 
 .rec-body {
     color: #475569;
-    line-height: 1.7;
+    line-height: 1.68;
     font-size: .93rem;
 }
 
 .rec-tag {
-    margin-top: .75rem;
+    margin-top: .72rem;
     display: inline-block;
     padding: .32rem .65rem;
     border-radius: 999px;
     background: #eff6ff;
-    color: #2563eb;
+    color: #1d4ed8;
     font-size: .74rem;
     font-weight: 800;
 }
@@ -322,10 +316,11 @@ html, body, [class*="css"] {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    padding: .7rem .85rem;
+    padding: .72rem .85rem;
     border-bottom: 1px solid #e2e8f0;
     color: #334155;
     font-size: .9rem;
+    background: #ffffff;
 }
 
 .file-ok {
@@ -338,12 +333,38 @@ html, body, [class*="css"] {
     font-weight: 800;
 }
 
+div[data-testid="stTabs"] {
+    margin-top: 1rem;
+}
+
 div[data-testid="stTabs"] button {
     font-weight: 700 !important;
+    color: #334155 !important;
 }
 
 div[data-testid="stTabs"] button[aria-selected="true"] {
     color: #2563eb !important;
+    border-bottom-color: #2563eb !important;
+}
+
+[data-testid="stMetric"] {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: .8rem .95rem;
+    box-shadow: 0 8px 22px rgba(15,23,42,.04);
+}
+
+[data-testid="stMetricLabel"] {
+    color: #64748b !important;
+}
+
+[data-testid="stMetricValue"] {
+    color: #0f172a !important;
+}
+
+hr {
+    border-color: #e2e8f0 !important;
 }
 </style>
 """,
@@ -385,10 +406,10 @@ def load_img(key):
 
 
 # ============================================================
-# HELPER COMPONENTS
+# HELPERS
 # ============================================================
 
-def metric_card(label, value, sub="", accent="green"):
+def metric_card(label, value, sub=""):
     st.markdown(
         f"""
 <div class="metric-card">
@@ -462,7 +483,7 @@ def theme_fig(fig, title=None, height=420):
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="#ffffff",
         font=dict(family="Inter", color="#334155", size=12),
-        margin=dict(l=30, r=25, t=60 if title else 30, b=45),
+        margin=dict(l=35, r=25, t=60 if title else 30, b=45),
         title=dict(
             text=title,
             font=dict(size=18, color="#0f172a", family="Inter"),
@@ -473,11 +494,13 @@ def theme_fig(fig, title=None, height=420):
             gridcolor="#e5e7eb",
             zerolinecolor="#e5e7eb",
             title_font=dict(color="#475569"),
+            tickfont=dict(color="#334155"),
         ),
         yaxis=dict(
             gridcolor="#e5e7eb",
             zerolinecolor="#e5e7eb",
             title_font=dict(color="#475569"),
+            tickfont=dict(color="#334155"),
         ),
         legend=dict(
             orientation="h",
@@ -505,7 +528,7 @@ def chart_rating_distribution(df):
             y=counts.values,
             marker=dict(
                 color=[RATING_COLORS[r] for r in counts.index],
-                line=dict(color="rgba(255,255,255,.8)", width=1),
+                line=dict(color="rgba(255,255,255,.9)", width=1),
             ),
             text=[f"{int(v):,}<br>{v/total*100:.1f}%" for v in counts.values],
             textposition="outside",
@@ -539,27 +562,28 @@ def chart_property_type(df):
     )
 
     fig = theme_fig(fig, "Property Type Distribution", 360)
-    fig.update_layout(
-        showlegend=False,
-        xaxis_title="Number of certificates",
-        yaxis_title="",
-    )
+    fig.update_layout(showlegend=False, xaxis_title="Number of certificates", yaxis_title="")
     return fig
 
 
 def chart_built_form(df):
-    clean = df.copy()
-    if "BUILT_FORM" not in clean.columns:
+    if "BUILT_FORM" not in df.columns:
         return go.Figure()
 
-    counts = clean["BUILT_FORM"].replace(["NO DATA!", "Not Recorded"], np.nan).dropna().value_counts().sort_values()
+    counts = (
+        df["BUILT_FORM"]
+        .replace(["NO DATA!", "Not Recorded"], np.nan)
+        .dropna()
+        .value_counts()
+        .sort_values()
+    )
 
     fig = go.Figure(
         go.Bar(
             x=counts.values,
             y=counts.index,
             orientation="h",
-            marker=dict(color=PURPLE),
+            marker=dict(color="#1E40AF"),
             text=[f"{v:,}" for v in counts.values],
             textposition="outside",
             hovertemplate="<b>%{y}</b><br>%{x:,} certificates<extra></extra>",
@@ -567,11 +591,7 @@ def chart_built_form(df):
     )
 
     fig = theme_fig(fig, "Built Form Distribution", 360)
-    fig.update_layout(
-        showlegend=False,
-        xaxis_title="Number of certificates",
-        yaxis_title="",
-    )
+    fig.update_layout(showlegend=False, xaxis_title="Number of certificates", yaxis_title="")
     return fig
 
 
@@ -587,7 +607,7 @@ def chart_average_score(df, column, title, top_n=None):
     if top_n:
         grp = grp.tail(top_n)
 
-    colors = px.colors.sample_colorscale("Bluered", np.linspace(0.15, 0.85, len(grp)))
+    colors = px.colors.sample_colorscale("Blues", np.linspace(0.35, 0.9, len(grp)))
 
     fig = go.Figure(
         go.Bar(
@@ -657,8 +677,8 @@ def chart_model_comparison(model_df):
 
     metrics = [
         ("Accuracy", BLUE),
-        ("Macro F1", TEAL),
-        ("Weighted F1", PURPLE),
+        ("Macro F1", "#0F766E"),
+        ("Weighted F1", "#1E40AF"),
     ]
 
     for metric, color in metrics:
@@ -767,7 +787,7 @@ def grouped_perm_importance(perm_df, top_n=20):
             x=grp.values,
             y=grp.index,
             orientation="h",
-            marker=dict(color=PINK),
+            marker=dict(color="#1E40AF"),
             text=[f"{v:.3f}" for v in grp.values],
             textposition="outside",
             hovertemplate="<b>%{y}</b><br>Summed importance: %{x:.4f}<extra></extra>",
@@ -792,7 +812,7 @@ def chart_rf_importance(rf_df, top_n=20):
             x=top["MDI_Importance"],
             y=top["Feature"],
             orientation="h",
-            marker=dict(color=PURPLE),
+            marker=dict(color="#0F766E"),
             text=[f"{v:.3f}" for v in top["MDI_Importance"]],
             textposition="outside",
             hovertemplate="<b>%{y}</b><br>MDI: %{x:.4f}<extra></extra>",
@@ -817,7 +837,6 @@ def sidebar(df):
     with st.sidebar:
         st.markdown("### ⚡ EPC Dashboard")
         st.caption("COM6003 Data Science · Buckinghamshire")
-
         st.divider()
 
         if df is not None:
@@ -868,9 +887,9 @@ def main():
     </div>
     <div class="chip-row">
         <span class="chip">🏠 Domestic EPCs</span>
-        <span class="chip">🧠 Predictive analytics</span>
-        <span class="chip">📊 Feature importance</span>
-        <span class="chip">🌿 Energy efficiency</span>
+        <span class="chip">📊 Descriptive analytics</span>
+        <span class="chip">🧠 Predictive modelling</span>
+        <span class="chip">⚙️ Feature importance</span>
     </div>
 </div>
 """,
@@ -880,9 +899,6 @@ def main():
     if df is None:
         st.error("The main EPC dataset could not be loaded. Open the Files tab to check filenames.")
         return
-
-    if model_df is None:
-        st.warning("Model results file is missing. Some dashboard sections may be incomplete.")
 
     total_records = len(df)
     dominant_rating = df["CURRENT_ENERGY_RATING"].mode()[0]
@@ -912,8 +928,6 @@ def main():
     with k5:
         metric_card("Best Macro F1", f"{best_f1:.3f}", best_f1_model)
 
-    st.markdown("")
-
     tabs = st.tabs(
         [
             "Executive Overview",
@@ -926,9 +940,7 @@ def main():
         ]
     )
 
-    # ========================================================
     # TAB 1
-    # ========================================================
     with tabs[0]:
         section(
             "Executive View",
@@ -967,9 +979,7 @@ def main():
             with st.expander("Notebook output: EPC rating distribution"):
                 st.image(fig, width="stretch")
 
-    # ========================================================
     # TAB 2
-    # ========================================================
     with tabs[1]:
         section(
             "Stock Characteristics",
@@ -1019,14 +1029,11 @@ def main():
         )
 
         insight_box(
-            "The descriptive analysis shows that building form, property type and construction age are "
-            "important contextual variables. These do not act alone, but they help explain why the EPC "
-            "stock is concentrated around mid-efficiency bands."
+            "The descriptive analysis shows that building form, property type and construction age are important contextual variables. "
+            "These do not act alone, but they help explain why the EPC stock is concentrated around mid-efficiency bands."
         )
 
-    # ========================================================
     # TAB 3
-    # ========================================================
     with tabs[2]:
         section(
             "Diagnostic View",
@@ -1083,14 +1090,11 @@ def main():
             )
 
         success_box(
-            "Diagnostic patterns support the modelling results: heating efficiency, hot water efficiency, "
-            "insulation quality, roof and wall efficiency, fuel type and built form all help explain EPC "
-            "rating differences."
+            "Diagnostic patterns support the modelling results: heating efficiency, hot water efficiency, insulation quality, "
+            "roof and wall efficiency, fuel type and built form all help explain EPC rating differences."
         )
 
-    # ========================================================
     # TAB 4
-    # ========================================================
     with tabs[3]:
         section(
             "Predictive Modelling",
@@ -1121,9 +1125,8 @@ def main():
                     st.metric("Dummy baseline accuracy", "N/A")
 
             insight_box(
-                "HistGradientBoosting achieved the highest overall accuracy, while Logistic Regression "
-                "achieved the best Macro F1. Macro F1 is important because the EPC classes are imbalanced, "
-                "especially for A, F and G ratings."
+                "HistGradientBoosting achieved the highest overall accuracy, while Logistic Regression achieved the best Macro F1. "
+                "Macro F1 is important because the EPC classes are imbalanced, especially for A, F and G ratings."
             )
 
             c4, c5 = st.columns(2)
@@ -1136,9 +1139,7 @@ def main():
                 if img:
                     st.image(img, caption="Confusion matrix output", width="stretch")
 
-    # ========================================================
     # TAB 5
-    # ========================================================
     with tabs[4]:
         section(
             "Interpretability",
@@ -1197,9 +1198,7 @@ def main():
             else:
                 warn_box("random_forest_feature_importance.csv is missing.")
 
-    # ========================================================
     # TAB 6
-    # ========================================================
     with tabs[5]:
         section(
             "Decision Support",
@@ -1209,48 +1208,42 @@ def main():
 
         rec_card(
             "1. Prioritise heating and hot water efficiency improvements",
-            "Hot water energy efficiency, low-efficiency heating and main heating efficiency were among the "
-            "strongest predictive factors. This suggests that inefficient heating and hot water systems should "
-            "be prioritised for targeted improvement programmes.",
+            "Hot water energy efficiency, low-efficiency heating and main heating efficiency were among the strongest predictive factors. "
+            "This suggests that inefficient heating and hot water systems should be prioritised for targeted improvement programmes.",
             "High impact",
         )
 
         rec_card(
             "2. Target insulation upgrades across walls, roofs and floors",
-            "The insulation quality score, roof efficiency, wall efficiency and floor descriptions were influential "
-            "in the feature importance results. Fabric upgrades should therefore be a central retrofit priority.",
+            "The insulation quality score, roof efficiency, wall efficiency and floor descriptions were influential in the feature importance results. "
+            "Fabric upgrades should therefore be a central retrofit priority.",
             "Fabric-first priority",
         )
 
         rec_card(
             "3. Focus local interventions on older and detached properties",
-            "Built form and construction age help explain EPC differences. Detached and older properties often have "
-            "greater heat loss risk due to exposed surfaces and less efficient construction standards.",
+            "Built form and construction age help explain EPC differences. Detached and older properties often have greater heat loss risk due to exposed surfaces and less efficient construction standards.",
             "Targeted retrofit",
         )
 
         rec_card(
             "4. Use predictive modelling to support property prioritisation",
-            "The trained model can be used as a decision-support tool to flag property profiles that are likely to "
-            "have lower EPC ratings. This could help local authorities and housing providers prioritise engagement.",
+            "The trained model can be used as a decision-support tool to flag property profiles that are likely to have lower EPC ratings. "
+            "This could help local authorities and housing providers prioritise engagement.",
             "Data-driven targeting",
         )
 
         rec_card(
             "5. Improve EPC data quality for future analysis",
-            "Unknown and missing values reduce analytical certainty. More complete and standardised assessment records "
-            "would improve future modelling, monitoring and policy evaluation.",
+            "Unknown and missing values reduce analytical certainty. More complete and standardised assessment records would improve future modelling, monitoring and policy evaluation.",
             "Data quality",
         )
 
         warn_box(
-            "The dashboard is a visual demonstration tool. The Jupyter notebook remains the primary reproducible "
-            "evidence for the coursework submission."
+            "The dashboard is a visual demonstration tool. The Jupyter notebook remains the primary reproducible evidence for the coursework submission."
         )
 
-    # ========================================================
     # TAB 7
-    # ========================================================
     with tabs[6]:
         section(
             "Repository Check",
