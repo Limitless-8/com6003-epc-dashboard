@@ -397,6 +397,162 @@ h1, h2, h3 {
     background: #ffffff !important;
 }
 
+
+/* ===== Professional visual polish patch ===== */
+
+.block-container {
+    padding-top: 1.1rem !important;
+    padding-left: 3.1rem !important;
+    padding-right: 3.1rem !important;
+    max-width: 1480px !important;
+}
+
+[data-testid="stAppViewContainer"] {
+    background:
+        radial-gradient(circle at 8% 6%, rgba(37,99,235,0.055), transparent 26%),
+        radial-gradient(circle at 92% 4%, rgba(15,23,42,0.035), transparent 26%),
+        linear-gradient(180deg, #f8fafc 0%, #f3f6fb 52%, #eef2f7 100%) !important;
+}
+
+[data-testid="stSidebar"] {
+    box-shadow: 8px 0 26px rgba(15,23,42,.035);
+}
+
+.hero {
+    padding: 2.45rem 3rem !important;
+    border-radius: 24px !important;
+    background:
+        radial-gradient(circle at 15% 15%, rgba(37,99,235,0.12), transparent 30%),
+        radial-gradient(circle at 92% 10%, rgba(15,23,42,0.06), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #f8fbff 58%, #edf5ff 100%) !important;
+    border: 1px solid rgba(148,163,184,0.24) !important;
+    box-shadow: 0 18px 46px rgba(15,23,42,0.075) !important;
+}
+
+.hero-title {
+    font-size: clamp(2.15rem, 4.4vw, 4.05rem) !important;
+    letter-spacing: -0.055em !important;
+}
+
+.hero-subtitle {
+    max-width: 860px !important;
+    font-size: 1.02rem !important;
+    color: #334155 !important;
+}
+
+.metric-card {
+    border-top: 0 !important;
+    border-left: 5px solid #2563eb !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%) !important;
+    min-height: 108px !important;
+    box-shadow: 0 10px 26px rgba(15,23,42,.055) !important;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    transition: .18s ease;
+    box-shadow: 0 16px 36px rgba(15,23,42,.085) !important;
+}
+
+.metric-value {
+    font-size: 1.78rem !important;
+}
+
+.metric-sub {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+    border: 1px solid #bfdbfe !important;
+}
+
+div[data-testid="stTabs"] {
+    background: rgba(255,255,255,.74);
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: .25rem .45rem .15rem;
+    box-shadow: 0 10px 24px rgba(15,23,42,.045);
+}
+
+div[data-testid="stTabs"] button {
+    font-size: .92rem !important;
+    padding: .55rem .85rem !important;
+}
+
+div[data-testid="stTabs"] button[aria-selected="true"] {
+    background: #eff6ff !important;
+    border-radius: 12px !important;
+}
+
+.section-title {
+    font-size: 1.95rem !important;
+}
+
+.section-subtitle {
+    font-size: 1rem !important;
+    color: #475569 !important;
+}
+
+.insight,
+.success-box,
+.warn-box,
+.rec-card {
+    box-shadow: 0 10px 26px rgba(15,23,42,.045) !important;
+}
+
+[data-testid="stPlotlyChart"] {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: .75rem .9rem .25rem;
+    box-shadow: 0 10px 26px rgba(15,23,42,.045);
+    margin-bottom: 1.15rem;
+}
+
+[data-testid="stImage"] {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: .65rem;
+    box-shadow: 0 10px 24px rgba(15,23,42,.045);
+}
+
+[data-testid="stImageCaption"] {
+    color: #334155 !important;
+    opacity: 1 !important;
+    font-size: .92rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+}
+
+[data-testid="stMetric"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-left: 4px solid #2563eb !important;
+}
+
+[data-testid="stMetricValue"] {
+    font-weight: 800 !important;
+    letter-spacing: -0.035em !important;
+}
+
+.stSlider > div {
+    color: #0f172a !important;
+}
+
+@media (max-width: 900px) {
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .hero {
+        padding: 2rem 1.4rem !important;
+    }
+
+    .hero-title {
+        font-size: 2.4rem !important;
+    }
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -503,18 +659,45 @@ def render_file_row(name, path):
     )
 
 
+
+# ============================================================
+# LABEL CLEANING HELPERS
+# ============================================================
+
+def clean_label(value, max_len=42):
+    """Shorten long EPC category labels for dashboard readability."""
+    value = str(value)
+    replacements = {
+        " - this is for backwards compatibility only and should not be used": "",
+        "mains gas (not community)": "Mains gas",
+        "Gas: mains gas": "Mains gas",
+        "Electricity: electricity, unspecified tariff": "Electricity, unspecified tariff",
+        "Solid fuel: wood logs": "Wood logs",
+        "appliances able to use mineral oil or liquid biofuel": "Mineral oil / biofuel",
+        "solid, no insulation (assumed)": "Solid, no insulation",
+        "suspended, no insulation (assumed)": "Suspended, no insulation",
+        "Boiler and radiators, mains gas": "Boiler + radiators, mains gas",
+    }
+    for old, new in replacements.items():
+        value = value.replace(old, new)
+    value = value.strip()
+    if len(value) > max_len:
+        return value[:max_len - 1].rstrip() + "…"
+    return value
+
+
 # ============================================================
 # PLOTLY THEME
 # ============================================================
 
-def theme_fig(fig, title=None, height=520):
+def theme_fig(fig, title=None, height=560):
     fig.update_layout(
         template="plotly_white",
         height=height,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="#ffffff",
         font=dict(family="Inter", color="#1f2937", size=14),
-        margin=dict(l=170, r=55, t=80 if title else 50, b=75),
+        margin=dict(l=190, r=70, t=82 if title else 52, b=78),
         title=dict(
             text=title,
             font=dict(size=22, color="#0f172a", family="Inter"),
@@ -529,7 +712,7 @@ def theme_fig(fig, title=None, height=520):
             automargin=True,
         ),
         yaxis=dict(
-            gridcolor="#eef2f7",
+            gridcolor="#f1f5f9",
             zerolinecolor="#e5e7eb",
             title_font=dict(color="#334155", size=15),
             tickfont=dict(color="#334155", size=13),
@@ -543,6 +726,12 @@ def theme_fig(fig, title=None, height=520):
             x=1,
             bgcolor="rgba(255,255,255,0)",
             font=dict(size=13, color="#334155"),
+        ),
+        hoverlabel=dict(
+            bgcolor="#0f172a",
+            font_size=13,
+            font_family="Inter",
+            font_color="#ffffff",
         ),
     )
     return fig
@@ -587,7 +776,7 @@ def chart_property_type(df):
     fig = go.Figure(
         go.Bar(
             x=counts.values,
-            y=counts.index,
+            y=[clean_label(v) for v in counts.index],
             orientation="h",
             marker=dict(color=BLUE),
             text=[f"{v:,}" for v in counts.values],
@@ -616,7 +805,7 @@ def chart_built_form(df):
     fig = go.Figure(
         go.Bar(
             x=counts.values,
-            y=counts.index,
+            y=[clean_label(v) for v in counts.index],
             orientation="h",
             marker=dict(color="#1E40AF"),
             text=[f"{v:,}" for v in counts.values],
@@ -647,7 +836,7 @@ def chart_average_score(df, column, title, top_n=None):
     fig = go.Figure(
         go.Bar(
             x=grp.values,
-            y=grp.index.astype(str),
+            y=[clean_label(v) for v in grp.index.astype(str)],
             orientation="h",
             marker=dict(color=colors),
             text=[f"{v:.2f}" for v in grp.values],
@@ -745,7 +934,7 @@ def chart_perm_importance(perm_df, top_n=20):
     fig = go.Figure(
         go.Bar(
             x=top["Perm_Mean"],
-            y=top["Feature"],
+            y=[clean_label(v, 52) for v in top["Feature"]],
             orientation="h",
             marker=dict(color=BLUE),
             error_x=dict(
@@ -760,7 +949,7 @@ def chart_perm_importance(perm_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Top {top_n} Permutation Feature Importances", max(760, 44 * top_n + 180))
+    fig = theme_fig(fig, f"Top {top_n} Permutation Feature Importances", max(820, 46 * top_n + 190))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(autorange="reversed", gridcolor="#ffffff"),
@@ -820,7 +1009,7 @@ def grouped_perm_importance(perm_df, top_n=20):
     fig = go.Figure(
         go.Bar(
             x=grp.values,
-            y=grp.index,
+            y=[clean_label(v, 52) for v in grp.index],
             orientation="h",
             marker=dict(color="#1E40AF"),
             text=[f"{v:.3f}" for v in grp.values],
@@ -829,7 +1018,7 @@ def grouped_perm_importance(perm_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Grouped Feature Importance, Top {top_n}", max(760, 44 * len(grp) + 180))
+    fig = theme_fig(fig, f"Grouped Feature Importance, Top {top_n}", max(820, 46 * len(grp) + 190))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(gridcolor="#ffffff"),
@@ -845,7 +1034,7 @@ def chart_rf_importance(rf_df, top_n=20):
     fig = go.Figure(
         go.Bar(
             x=top["MDI_Importance"],
-            y=top["Feature"],
+            y=[clean_label(v, 52) for v in top["Feature"]],
             orientation="h",
             marker=dict(color="#0F766E"),
             text=[f"{v:.3f}" for v in top["MDI_Importance"]],
@@ -854,7 +1043,7 @@ def chart_rf_importance(rf_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Random Forest MDI Importance, Top {top_n}", max(760, 44 * len(top) + 180))
+    fig = theme_fig(fig, f"Random Forest MDI Importance, Top {top_n}", max(820, 46 * len(top) + 190))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(autorange="reversed", gridcolor="#ffffff"),
@@ -1022,39 +1211,34 @@ def main():
             "Descriptive analytics showing what has occurred across the local EPC stock.",
         )
 
-        c1, c2 = st.columns(2)
-        with c1:
-            st.plotly_chart(
-                chart_property_type(df),
-                width="stretch",
-                key="building_property_type",
-                config={"displayModeBar": False},
-            )
-        with c2:
-            st.plotly_chart(
-                chart_built_form(df),
-                width="stretch",
-                key="building_built_form",
-                config={"displayModeBar": False},
-            )
+        st.plotly_chart(
+            chart_property_type(df),
+            width="stretch",
+            key="building_property_type",
+            config={"displayModeBar": False},
+        )
 
-        st.markdown("")
-        c3, c4 = st.columns(2)
-        with c3:
-            st.plotly_chart(
-                chart_average_score(df, "PROPERTY_TYPE", "Average Rating Score by Property Type"),
-                width="stretch",
-                key="building_avg_property",
-                config={"displayModeBar": False},
-            )
-        with c4:
-            age_col = "PROPERTY_AGE_GROUP" if "PROPERTY_AGE_GROUP" in df.columns else "CONSTRUCTION_AGE_BAND"
-            st.plotly_chart(
-                chart_average_score(df, age_col, "Average Rating Score by Construction Age"),
-                width="stretch",
-                key="building_avg_age",
-                config={"displayModeBar": False},
-            )
+        st.plotly_chart(
+            chart_built_form(df),
+            width="stretch",
+            key="building_built_form",
+            config={"displayModeBar": False},
+        )
+
+        st.plotly_chart(
+            chart_average_score(df, "PROPERTY_TYPE", "Average Rating Score by Property Type"),
+            width="stretch",
+            key="building_avg_property",
+            config={"displayModeBar": False},
+        )
+
+        age_col = "PROPERTY_AGE_GROUP" if "PROPERTY_AGE_GROUP" in df.columns else "CONSTRUCTION_AGE_BAND"
+        st.plotly_chart(
+            chart_average_score(df, age_col, "Average Rating Score by Construction Age"),
+            width="stretch",
+            key="building_avg_age",
+            config={"displayModeBar": False},
+        )
 
         st.plotly_chart(
             chart_floor_area_box(df),
@@ -1158,15 +1342,13 @@ def main():
                 "Macro F1 is important because the EPC classes are imbalanced, especially for A, F and G ratings."
             )
 
-            c4, c5 = st.columns(2)
-            with c4:
-                img = load_img("fig17")
-                if img:
-                    st.image(img, caption="Notebook model comparison chart", width="stretch")
-            with c5:
-                img = load_img("fig18")
-                if img:
-                    st.image(img, caption="Confusion matrix output", width="stretch")
+            img = load_img("fig17")
+            if img:
+                st.image(img, caption="Notebook model comparison chart", width="stretch")
+
+            img = load_img("fig18")
+            if img:
+                st.image(img, caption="Confusion matrix output", width="stretch")
 
     # TAB 5
     with tabs[4]:
@@ -1202,15 +1384,13 @@ def main():
                 "main heating efficiency, built form, roof efficiency, fuel type and number of rooms."
             )
 
-            c3, c4 = st.columns(2)
-            with c3:
-                img = load_img("fig19")
-                if img:
-                    st.image(img, caption="Notebook output: permutation importance", width="stretch")
-            with c4:
-                img = load_img("fig20")
-                if img:
-                    st.image(img, caption="Notebook output: grouped permutation importance", width="stretch")
+            img = load_img("fig19")
+            if img:
+                st.image(img, caption="Notebook output: permutation importance", width="stretch")
+
+            img = load_img("fig20")
+            if img:
+                st.image(img, caption="Notebook output: grouped permutation importance", width="stretch")
 
         with st.expander("Supplementary Random Forest MDI importance"):
             if rf_df is not None:
