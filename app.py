@@ -366,6 +366,37 @@ div[data-testid="stTabs"] button[aria-selected="true"] {
 hr {
     border-color: #e2e8f0 !important;
 }
+
+[data-testid="stMarkdownContainer"] p {
+    color: #334155;
+    font-size: 1rem;
+    line-height: 1.7;
+}
+
+[data-testid="stCaptionContainer"] {
+    color: #475569 !important;
+    font-size: .9rem !important;
+}
+
+[data-testid="stImageCaption"] {
+    color: #334155 !important;
+    font-size: .9rem !important;
+    font-weight: 600 !important;
+}
+
+.stSlider label {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+h1, h2, h3 {
+    color: #0f172a !important;
+}
+
+.plot-container {
+    background: #ffffff !important;
+}
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -476,42 +507,46 @@ def render_file_row(name, path):
 # PLOTLY THEME
 # ============================================================
 
-def theme_fig(fig, title=None, height=420):
+def theme_fig(fig, title=None, height=520):
     fig.update_layout(
         template="plotly_white",
         height=height,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="#ffffff",
-        font=dict(family="Inter", color="#334155", size=12),
-        margin=dict(l=35, r=25, t=60 if title else 30, b=45),
+        font=dict(family="Inter", color="#1f2937", size=14),
+        margin=dict(l=170, r=55, t=80 if title else 50, b=75),
         title=dict(
             text=title,
-            font=dict(size=18, color="#0f172a", family="Inter"),
-            x=0.02,
+            font=dict(size=22, color="#0f172a", family="Inter"),
+            x=0.01,
             xanchor="left",
         ) if title else None,
         xaxis=dict(
             gridcolor="#e5e7eb",
             zerolinecolor="#e5e7eb",
-            title_font=dict(color="#475569"),
-            tickfont=dict(color="#334155"),
+            title_font=dict(color="#334155", size=15),
+            tickfont=dict(color="#334155", size=13),
+            automargin=True,
         ),
         yaxis=dict(
-            gridcolor="#e5e7eb",
+            gridcolor="#eef2f7",
             zerolinecolor="#e5e7eb",
-            title_font=dict(color="#475569"),
-            tickfont=dict(color="#334155"),
+            title_font=dict(color="#334155", size=15),
+            tickfont=dict(color="#334155", size=13),
+            automargin=True,
         ),
         legend=dict(
             orientation="h",
             yanchor="bottom",
-            y=1.03,
+            y=1.04,
             xanchor="right",
             x=1,
             bgcolor="rgba(255,255,255,0)",
+            font=dict(size=13, color="#334155"),
         ),
     )
     return fig
+
 
 
 # ============================================================
@@ -725,7 +760,7 @@ def chart_perm_importance(perm_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Top {top_n} Permutation Feature Importances", max(480, 32 * top_n + 120))
+    fig = theme_fig(fig, f"Top {top_n} Permutation Feature Importances", max(760, 44 * top_n + 180))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(autorange="reversed", gridcolor="#ffffff"),
@@ -794,7 +829,7 @@ def grouped_perm_importance(perm_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Grouped Feature Importance, Top {top_n}", max(480, 32 * len(grp) + 120))
+    fig = theme_fig(fig, f"Grouped Feature Importance, Top {top_n}", max(760, 44 * len(grp) + 180))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(gridcolor="#ffffff"),
@@ -819,7 +854,7 @@ def chart_rf_importance(rf_df, top_n=20):
         )
     )
 
-    fig = theme_fig(fig, f"Random Forest MDI Importance, Top {top_n}", max(480, 32 * len(top) + 120))
+    fig = theme_fig(fig, f"Random Forest MDI Importance, Top {top_n}", max(760, 44 * len(top) + 180))
     fig.update_layout(
         showlegend=False,
         yaxis=dict(autorange="reversed", gridcolor="#ffffff"),
@@ -1041,53 +1076,47 @@ def main():
             "Diagnostic analytics examining the relationship between building characteristics and energy ratings.",
         )
 
-        c1, c2 = st.columns(2)
-        with c1:
-            st.plotly_chart(
-                chart_average_score(df, "BUILT_FORM", "Mean Rating Score by Built Form"),
-                width="stretch",
-                key="diag_built_form",
-                config={"displayModeBar": False},
-            )
-        with c2:
-            st.plotly_chart(
-                chart_average_score(df, "MAIN_FUEL", "Mean Rating Score by Main Fuel", top_n=12),
-                width="stretch",
-                key="diag_main_fuel",
-                config={"displayModeBar": False},
-            )
+        st.plotly_chart(
+            chart_average_score(df, "BUILT_FORM", "Mean Rating Score by Built Form"),
+            width="stretch",
+            key="diag_built_form",
+            config={"displayModeBar": False},
+        )
 
-        c3, c4 = st.columns(2)
-        with c3:
-            st.plotly_chart(
-                chart_average_score(df, "WALLS_ENERGY_EFF", "Mean Rating Score by Wall Efficiency"),
-                width="stretch",
-                key="diag_walls",
-                config={"displayModeBar": False},
-            )
-        with c4:
-            st.plotly_chart(
-                chart_average_score(df, "ROOF_ENERGY_EFF", "Mean Rating Score by Roof Efficiency"),
-                width="stretch",
-                key="diag_roof",
-                config={"displayModeBar": False},
-            )
+        st.plotly_chart(
+            chart_average_score(df, "MAIN_FUEL", "Mean Rating Score by Main Fuel", top_n=12),
+            width="stretch",
+            key="diag_main_fuel",
+            config={"displayModeBar": False},
+        )
 
-        c5, c6 = st.columns(2)
-        with c5:
-            st.plotly_chart(
-                chart_average_score(df, "WINDOWS_ENERGY_EFF", "Mean Rating Score by Window Efficiency"),
-                width="stretch",
-                key="diag_windows",
-                config={"displayModeBar": False},
-            )
-        with c6:
-            st.plotly_chart(
-                chart_average_score(df, "MAINHEAT_ENERGY_EFF", "Mean Rating Score by Main Heating Efficiency"),
-                width="stretch",
-                key="diag_heating",
-                config={"displayModeBar": False},
-            )
+        st.plotly_chart(
+            chart_average_score(df, "WALLS_ENERGY_EFF", "Mean Rating Score by Wall Efficiency"),
+            width="stretch",
+            key="diag_walls",
+            config={"displayModeBar": False},
+        )
+
+        st.plotly_chart(
+            chart_average_score(df, "ROOF_ENERGY_EFF", "Mean Rating Score by Roof Efficiency"),
+            width="stretch",
+            key="diag_roof",
+            config={"displayModeBar": False},
+        )
+
+        st.plotly_chart(
+            chart_average_score(df, "WINDOWS_ENERGY_EFF", "Mean Rating Score by Window Efficiency"),
+            width="stretch",
+            key="diag_windows",
+            config={"displayModeBar": False},
+        )
+
+        st.plotly_chart(
+            chart_average_score(df, "MAINHEAT_ENERGY_EFF", "Mean Rating Score by Main Heating Efficiency"),
+            width="stretch",
+            key="diag_heating",
+            config={"displayModeBar": False},
+        )
 
         success_box(
             "Diagnostic patterns support the modelling results: heating efficiency, hot water efficiency, insulation quality, "
@@ -1152,21 +1181,21 @@ def main():
         else:
             n = st.slider("Top features to display", 10, 30, 20)
 
-            c1, c2 = st.columns(2)
-            with c1:
-                st.plotly_chart(
-                    chart_perm_importance(perm_df, n),
-                    width="stretch",
-                    key="feature_perm",
-                    config={"displayModeBar": False},
-                )
-            with c2:
-                st.plotly_chart(
-                    grouped_perm_importance(perm_df, n),
-                    width="stretch",
-                    key="feature_grouped",
-                    config={"displayModeBar": False},
-                )
+            st.plotly_chart(
+                chart_perm_importance(perm_df, n),
+                width="stretch",
+                key="feature_perm",
+                config={"displayModeBar": False},
+            )
+
+            st.markdown("")
+
+            st.plotly_chart(
+                grouped_perm_importance(perm_df, n),
+                width="stretch",
+                key="feature_grouped",
+                config={"displayModeBar": False},
+            )
 
             success_box(
                 "The strongest factors include hot water efficiency, low-efficiency heating, insulation quality, "
