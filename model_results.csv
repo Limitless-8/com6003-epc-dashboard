@@ -1,0 +1,6 @@
+Model,Accuracy,Macro F1,Weighted F1
+Logistic Regression,0.7827,0.6644,0.7801
+Decision Tree,0.7665,0.6577,0.7649
+HistGradientBoosting,0.7897,0.6573,0.7885
+Random Forest,0.7693,0.6137,0.7636
+Dummy (Most Frequent),0.43,0.0859,0.2586
