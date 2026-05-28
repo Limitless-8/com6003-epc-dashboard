@@ -1351,6 +1351,19 @@ def main():
             if img:
                 st.image(img, caption="Confusion matrix output", width="stretch")
 
+            img = load_img("fig18b")
+            if img:
+                st.image(
+                    img,
+                    caption="Classification report heatmap for the selected Logistic Regression model",
+                    width="stretch",
+                )
+                insight_box(
+                    "The classification report heatmap shows class-wise precision, recall and F1-score. "
+                    "It confirms stronger performance on common middle bands such as B, C and D, "
+                    "while rarer classes such as A remain more difficult to classify."
+                )
+
     # TAB 5
     with tabs[4]:
         section(
