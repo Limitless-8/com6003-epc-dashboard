@@ -38,6 +38,7 @@ FILES = {
     "fig01": BASE / "fig01_rating_distribution.png",
     "fig17": BASE / "fig17_model_comparison.png",
     "fig18": BASE / "fig18_confusion_matrix.png",
+    "fig18b": BASE / "fig18b_classification_report_heatmap.png",
     "fig19": BASE / "fig19_permutation_importance.png",
     "fig20": BASE / "fig20_grouped_permutation_importance.png",
     "fig21": BASE / "fig21_rf_mdi_importance.png",
