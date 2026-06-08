@@ -1,0 +1,4 @@
+Experiment,Features Used,Accuracy,Macro F1,Weighted F1,Macro F1 Change vs All Features
+All selected features,45,0.7827,0.6644,0.7801,0.0
+Without INSULATION_QUALITY_SCORE,44,0.7825,0.6606,0.7797,-0.0038
+Without all engineered features,38,0.7826,0.6581,0.7796,-0.0063

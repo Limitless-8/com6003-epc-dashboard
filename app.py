@@ -7,6 +7,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 import streamlit as st
+import streamlit.components.v1 as components
 import plotly.graph_objects as go
 import plotly.express as px
 from PIL import Image
@@ -42,6 +43,19 @@ FILES = {
     "fig19": BASE / "fig19_permutation_importance.png",
     "fig20": BASE / "fig20_grouped_permutation_importance.png",
     "fig21": BASE / "fig21_rf_mdi_importance.png",
+    "fig16": BASE / "fig16_correlation_heatmap.png",
+    "desc_stats": BASE / "descriptive_statistics_table.csv",
+    "rating_group_stats": BASE / "rating_group_summary_statistics.csv",
+    "shape_summary": BASE / "dataset_shape_summary.csv",
+    "corr": BASE / "correlation_matrix.csv",
+    "imbalance": BASE / "class_weight_sensitivity_results.csv",
+    "tuning": BASE / "logistic_regression_tuning_results.csv",
+    "tuned_test": BASE / "tuned_logistic_regression_test_results.csv",
+    "ablation": BASE / "feature_ablation_results.csv",
+    "recommendation_evidence": BASE / "recommendation_evidence_table.csv",
+    "classification_report": BASE / "classification_report_selected_model.csv",
+    "retrofit_rules": BASE / "retrofit_scenario_rules.csv",
+    "retrofit_examples": BASE / "retrofit_scenario_examples.csv",
 }
 
 
@@ -508,6 +522,774 @@ h1, h2, h3 {
         font-size: 2.65rem !important;
     }
 }
+
+
+/* ===== premium evidence cards and retrofit explorer ===== */
+
+.evidence-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin: 1rem 0 1.2rem;
+}
+
+.evidence-card {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    border: 1px solid #dbeafe;
+    border-left: 5px solid #2563eb;
+    border-radius: 22px;
+    padding: 1.05rem 1.15rem;
+    box-shadow: 0 16px 38px rgba(15,23,42,0.07);
+}
+
+.evidence-label {
+    font-size: .72rem;
+    font-weight: 900;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: .45rem;
+}
+
+.evidence-value {
+    font-size: 1.85rem;
+    font-weight: 900;
+    letter-spacing: -0.055em;
+    color: #0f172a;
+    margin-bottom: .25rem;
+}
+
+.evidence-note {
+    font-size: .88rem;
+    color: #334155;
+    line-height: 1.55;
+}
+
+.driver-wrap {
+    background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 26px;
+    padding: 1.2rem;
+    box-shadow: 0 18px 42px rgba(15,23,42,0.075);
+    margin: .75rem 0 1.25rem;
+}
+
+.driver-title {
+    color: #0f172a;
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    margin-bottom: .25rem;
+}
+
+.driver-sub {
+    color: #475569;
+    font-size: .95rem;
+    margin-bottom: 1rem;
+}
+
+.driver-list {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: .75rem;
+}
+
+.driver-pill {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    padding: .85rem .9rem;
+    box-shadow: 0 10px 24px rgba(37,99,235,0.07);
+}
+
+.driver-rank {
+    color: #2563eb;
+    font-weight: 900;
+    font-size: .75rem;
+    margin-bottom: .3rem;
+}
+
+.driver-name {
+    color: #0f172a;
+    font-weight: 900;
+    font-size: .92rem;
+    line-height: 1.25;
+}
+
+.retrofit-result {
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+    color: #ffffff;
+    border-radius: 28px;
+    padding: 1.45rem 1.55rem;
+    box-shadow: 0 22px 52px rgba(37,99,235,0.22);
+    margin-top: .75rem;
+}
+
+.retrofit-result * {
+    color: #ffffff !important;
+}
+
+.retrofit-score {
+    font-size: 3rem;
+    font-weight: 900;
+    letter-spacing: -0.075em;
+    line-height: 1;
+}
+
+.retrofit-priority {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-top: .35rem;
+}
+
+.retrofit-small {
+    opacity: .9;
+    font-size: .94rem;
+    line-height: 1.6;
+    margin-top: .75rem;
+}
+
+@media (max-width: 1050px) {
+    .evidence-grid,
+    .driver-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+/* ===== retrofit explorer visual polish ===== */
+
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    color: #0f172a !important;
+    box-shadow: 0 8px 20px rgba(15,23,42,0.045) !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #0f172a !important;
+}
+
+.retrofit-hero {
+    background:
+        radial-gradient(circle at 10% 10%, rgba(37,99,235,.12), transparent 30%),
+        linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 26px;
+    padding: 1.25rem 1.35rem;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 18px 42px rgba(15,23,42,.07);
+}
+
+.retrofit-hero-title {
+    color: #0f172a;
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    margin-bottom: .35rem;
+}
+
+.retrofit-hero-text {
+    color: #334155;
+    font-size: .96rem;
+    line-height: 1.65;
+}
+
+.retrofit-warning {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 5px solid #f97316;
+    color: #9a3412;
+    border-radius: 18px;
+    padding: .95rem 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 650;
+    line-height: 1.55;
+}
+
+.retrofit-result {
+    background:
+        radial-gradient(circle at 88% 18%, rgba(96,165,250,.35), transparent 28%),
+        linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%) !important;
+    color: #ffffff;
+    border-radius: 26px;
+    padding: 1.3rem 1.45rem;
+    box-shadow: 0 24px 58px rgba(37,99,235,0.22);
+    margin-top: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.retrofit-result-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 1.2rem;
+    align-items: center;
+}
+
+.retrofit-score-box {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 22px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.retrofit-score {
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: .95;
+}
+
+.retrofit-score-label {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    font-weight: 900;
+    opacity: .85;
+    margin-bottom: .45rem;
+}
+
+.retrofit-priority {
+    font-size: 1.45rem;
+    font-weight: 900;
+    margin-bottom: .45rem;
+}
+
+.retrofit-small {
+    opacity: .95;
+    font-size: .96rem;
+    line-height: 1.7;
+}
+
+.retrofit-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: .85rem;
+    margin: 1rem 0;
+}
+
+.retrofit-mini {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    padding: .9rem 1rem;
+    box-shadow: 0 12px 28px rgba(15,23,42,.055);
+}
+
+.retrofit-mini strong {
+    display: block;
+    color: #0f172a;
+    font-size: .95rem;
+    margin-bottom: .25rem;
+}
+
+.retrofit-mini span {
+    color: #475569;
+    font-size: .86rem;
+    line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+    .retrofit-result-grid,
+    .retrofit-mini-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+
+/* ===== light theme controls for Retrofit Explorer ===== */
+
+/* Streamlit select box closed state */
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    color: #0f172a !important;
+    box-shadow: 0 8px 20px rgba(15,23,42,0.045) !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #0f172a !important;
+}
+
+/* Select dropdown menu */
+div[role="listbox"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 42px rgba(15,23,42,0.12) !important;
+    padding: 0.35rem !important;
+}
+
+div[role="option"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-radius: 10px !important;
+    margin: 0.15rem 0 !important;
+}
+
+div[role="option"]:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+div[role="option"][aria-selected="true"] {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    font-weight: 800 !important;
+}
+
+/* Expander shell */
+[data-testid="stExpander"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 18px !important;
+    box-shadow: 0 12px 28px rgba(15,23,42,0.055) !important;
+    overflow: hidden !important;
+    margin-top: 1rem !important;
+}
+
+[data-testid="stExpander"] details {
+    background: #ffffff !important;
+}
+
+[data-testid="stExpander"] summary {
+    background: linear-gradient(180deg, #f8fbff 0%, #eff6ff 100%) !important;
+    color: #1e3a8a !important;
+    font-weight: 900 !important;
+    border-bottom: 1px solid #dbeafe !important;
+    padding: 0.95rem 1.1rem !important;
+}
+
+[data-testid="stExpander"] summary * {
+    color: #1e3a8a !important;
+}
+
+[data-testid="stExpander"] details[open] summary {
+    background: #eff6ff !important;
+}
+
+[data-testid="stExpander"] div[role="region"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Dataframes / tables */
+[data-testid="stDataFrame"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 18px !important;
+    overflow: hidden !important;
+    box-shadow: 0 12px 28px rgba(15,23,42,0.055) !important;
+}
+
+/* AgGrid/canvas dataframe fallback */
+[data-testid="stDataFrame"] * {
+    color-scheme: light !important;
+}
+
+/* Make all markdown inside expanders readable */
+[data-testid="stExpander"] p,
+[data-testid="stExpander"] span,
+[data-testid="stExpander"] div {
+    color: #0f172a !important;
+}
+
+/* Keep result card white text */
+.retrofit-result,
+.retrofit-result *,
+.retrofit-score-box,
+.retrofit-score-box * {
+    color: #ffffff !important;
+}
+
+/* Softer warning / info note */
+.retrofit-warning {
+    background: #fff7ed !important;
+    border: 1px solid #fed7aa !important;
+    border-left: 5px solid #f97316 !important;
+    color: #9a3412 !important;
+    border-radius: 18px !important;
+    padding: .95rem 1.1rem !important;
+    margin-bottom: 1rem !important;
+    font-weight: 650 !important;
+    line-height: 1.55 !important;
+}
+
+.retrofit-warning * {
+    color: #9a3412 !important;
+}
+
+/* Improve white cards under explorer */
+.retrofit-mini {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    color: #0f172a !important;
+}
+
+.retrofit-mini strong {
+    color: #0f172a !important;
+}
+
+.retrofit-mini span {
+    color: #475569 !important;
+}
+
+
+
+
+/* ===== stronger light fix for Streamlit/BaseWeb dropdowns and retrofit tables ===== */
+
+/* Closed select inputs */
+div[data-baseweb="select"],
+div[data-baseweb="select"] > div,
+div[data-baseweb="select"] div {
+    color-scheme: light !important;
+}
+
+div[data-baseweb="select"] > div {
+    background-color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    color: #0f172a !important;
+    box-shadow: 0 8px 20px rgba(15,23,42,0.045) !important;
+}
+
+div[data-baseweb="select"] input,
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] svg {
+    color: #0f172a !important;
+    fill: #64748b !important;
+}
+
+/* Dropdown popover, menu and option list */
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] > div,
+div[data-baseweb="menu"],
+ul[role="listbox"],
+div[role="listbox"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 42px rgba(15,23,42,0.12) !important;
+    color-scheme: light !important;
+}
+
+/* Dropdown options */
+li[role="option"],
+div[role="option"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-radius: 10px !important;
+    margin: 0.15rem 0.25rem !important;
+}
+
+li[role="option"] *,
+div[role="option"] * {
+    color: #0f172a !important;
+}
+
+li[role="option"]:hover,
+div[role="option"]:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+li[role="option"]:hover *,
+div[role="option"]:hover * {
+    color: #1d4ed8 !important;
+}
+
+li[aria-selected="true"],
+div[role="option"][aria-selected="true"] {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    font-weight: 800 !important;
+}
+
+/* Light custom tables used in Retrofit Explorer */
+.light-table-wrap {
+    background: #ffffff;
+    border: 1px solid #dbeafe;
+    border-radius: 18px;
+    overflow-x: auto;
+    box-shadow: 0 12px 28px rgba(15,23,42,0.055);
+    margin-top: 0.8rem;
+}
+
+.light-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.92rem;
+}
+
+.light-table th {
+    background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%);
+    color: #1e3a8a;
+    text-align: left;
+    padding: 0.85rem 0.9rem;
+    font-weight: 900;
+    border-bottom: 1px solid #bfdbfe;
+    white-space: nowrap;
+}
+
+.light-table td {
+    background: #ffffff;
+    color: #0f172a;
+    padding: 0.8rem 0.9rem;
+    border-bottom: 1px solid #eef2ff;
+    vertical-align: top;
+}
+
+.light-table tr:nth-child(even) td {
+    background: #f8fbff;
+}
+
+.light-table tr:hover td {
+    background: #eff6ff;
+}
+
+.light-table td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+
+
+
+/* ===== final dropdown popover light fix ===== */
+
+/* BaseWeb select container */
+[data-baseweb="select"] *,
+[data-baseweb="select"] {
+    color-scheme: light !important;
+}
+
+/* Popover layer generated outside normal Streamlit container */
+[data-baseweb="popover"] {
+    background: transparent !important;
+    color-scheme: light !important;
+}
+
+[data-baseweb="popover"] > div,
+[data-baseweb="popover"] div {
+    color-scheme: light !important;
+}
+
+/* Menu/listbox surfaces */
+[data-baseweb="menu"],
+[role="listbox"],
+ul[role="listbox"],
+div[role="listbox"] {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 14px !important;
+    box-shadow: 0 18px 42px rgba(15,23,42,0.16) !important;
+    color: #0f172a !important;
+    overflow: hidden !important;
+}
+
+/* Option rows */
+[role="option"],
+li[role="option"],
+div[role="option"],
+[data-baseweb="menu"] li,
+[data-baseweb="menu"] div {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Text inside option rows */
+[role="option"] *,
+li[role="option"] *,
+div[role="option"] *,
+[data-baseweb="menu"] * {
+    color: #0f172a !important;
+}
+
+/* Hover/focus/selected states */
+[role="option"]:hover,
+li[role="option"]:hover,
+div[role="option"]:hover,
+[aria-selected="true"] {
+    background-color: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+[role="option"]:hover *,
+li[role="option"]:hover *,
+div[role="option"]:hover *,
+[aria-selected="true"] * {
+    color: #1d4ed8 !important;
+    font-weight: 800 !important;
+}
+
+/* Nuclear fallback for dark BaseWeb option wrappers */
+div[class*="option"],
+li[class*="option"],
+div[class*="menu"],
+ul[class*="menu"] {
+    color-scheme: light !important;
+}
+
+
+
+
+/* ===== light radio controls for Retrofit Explorer ===== */
+
+[data-testid="stRadio"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 18px !important;
+    padding: 0.85rem 1rem !important;
+    box-shadow: 0 10px 24px rgba(15,23,42,0.045) !important;
+    margin-bottom: 0.75rem !important;
+}
+
+[data-testid="stRadio"] label {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+[data-testid="stRadio"] p {
+    color: #0f172a !important;
+}
+
+[data-testid="stRadio"] div[role="radiogroup"] {
+    gap: 0.35rem !important;
+}
+
+[data-testid="stRadio"] div[role="radiogroup"] label {
+    background: #f8fbff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 999px !important;
+    padding: 0.35rem 0.65rem !important;
+    margin: 0.15rem !important;
+}
+
+[data-testid="stRadio"] div[role="radiogroup"] label:hover {
+    background: #eff6ff !important;
+    border-color: #93c5fd !important;
+}
+
+[data-testid="stRadio"] input:checked + div {
+    color: #1d4ed8 !important;
+    font-weight: 900 !important;
+}
+
+.retrofit-control-note {
+    color: #64748b;
+    font-size: .86rem;
+    margin-top: -.35rem;
+    margin-bottom: .85rem;
+}
+
+
+
+
+/* ===== restored clean dropdown controls for Retrofit Explorer ===== */
+
+[data-testid="stRadio"] {
+    display: none !important;
+}
+
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 16px !important;
+    min-height: 48px !important;
+    color: #0f172a !important;
+    box-shadow: 0 8px 22px rgba(15,23,42,0.045) !important;
+}
+
+div[data-baseweb="select"] > div:hover {
+    border-color: #93c5fd !important;
+    box-shadow: 0 12px 28px rgba(37,99,235,0.075) !important;
+}
+
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] input {
+    color: #0f172a !important;
+    font-weight: 650 !important;
+}
+
+div[data-baseweb="select"] svg {
+    fill: #64748b !important;
+}
+
+/* Dropdown popover: Streamlit may still render a dark outer overlay in some browsers,
+   but these rules keep the option rows white/light and readable. */
+[data-baseweb="popover"],
+[data-baseweb="popover"] > div,
+[data-baseweb="menu"],
+ul[role="listbox"],
+div[role="listbox"] {
+    color-scheme: light !important;
+}
+
+[role="listbox"],
+ul[role="listbox"] {
+    background: #ffffff !important;
+    border: 1px solid #dbeafe !important;
+    border-radius: 16px !important;
+    padding: .35rem !important;
+    box-shadow: 0 18px 42px rgba(15,23,42,0.14) !important;
+}
+
+[role="option"],
+li[role="option"],
+div[role="option"] {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border-radius: 12px !important;
+    margin: .12rem 0 !important;
+    min-height: 40px !important;
+}
+
+[role="option"] *,
+li[role="option"] *,
+div[role="option"] * {
+    color: #0f172a !important;
+}
+
+[role="option"]:hover,
+li[role="option"]:hover,
+div[role="option"]:hover {
+    background: #eff6ff !important;
+    color: #1d4ed8 !important;
+}
+
+[role="option"]:hover *,
+li[role="option"]:hover *,
+div[role="option"]:hover * {
+    color: #1d4ed8 !important;
+}
+
+[aria-selected="true"],
+[role="option"][aria-selected="true"] {
+    background: #dbeafe !important;
+    color: #1d4ed8 !important;
+    font-weight: 900 !important;
+}
+
+/* Keep the Retrofit form compact and clean */
+.retrofit-mini-grid {
+    margin-bottom: 1.25rem !important;
+}
+
+
 </style>
 """,
     unsafe_allow_html=True,
@@ -1008,6 +1790,362 @@ def chart_rf_importance(rf_df, top_n=20):
     return fig
 
 
+
+
+
+def force_light_dropdowns():
+    components.html(
+        """
+        <script>
+        function forceLightMenus() {
+            const nodes = window.parent.document.querySelectorAll(
+                '[data-baseweb="popover"], [data-baseweb="menu"], [role="listbox"], [role="option"]'
+            );
+
+            nodes.forEach(el => {
+                el.style.background = '#ffffff';
+                el.style.backgroundColor = '#ffffff';
+                el.style.color = '#0f172a';
+                el.style.colorScheme = 'light';
+            });
+
+            const options = window.parent.document.querySelectorAll('[role="option"], [role="option"] *');
+            options.forEach(el => {
+                el.style.backgroundColor = '#ffffff';
+                el.style.color = '#0f172a';
+            });
+        }
+
+        setInterval(forceLightMenus, 250);
+        forceLightMenus();
+        </script>
+        """,
+        height=0,
+        width=0,
+    )
+
+
+# ============================================================
+# FINAL EVIDENCE HELPERS
+# ============================================================
+
+def load_table(key):
+    path = FILES.get(key)
+    if path and path.exists():
+        return pd.read_csv(path)
+    return None
+
+def df_to_light_table(df, numeric_cols=None):
+    import html
+
+    if df is None or len(df) == 0:
+        return ""
+
+    numeric_cols = set(numeric_cols or [])
+    columns = list(df.columns)
+
+    thead = "<thead><tr>" + "".join(
+        f"<th>{html.escape(str(col))}</th>" for col in columns
+    ) + "</tr></thead>"
+
+    rows = []
+    for _, row in df.iterrows():
+        cells = []
+        for col in columns:
+            value = row[col]
+            if pd.isna(value):
+                value = ""
+            cls = " class='num'" if col in numeric_cols else ""
+            cells.append(f"<td{cls}>{html.escape(str(value))}</td>")
+        rows.append("<tr>" + "".join(cells) + "</tr>")
+
+    tbody = "<tbody>" + "".join(rows) + "</tbody>"
+
+    return f"""
+    <div class="light-table-wrap">
+        <table class="light-table">
+            {thead}
+            {tbody}
+        </table>
+    </div>
+    """
+
+
+def evidence_cards(cards):
+    html = '<div class="evidence-grid">'
+    for label, value, note in cards:
+        html += f"""
+        <div class="evidence-card">
+            <div class="evidence-label">{label}</div>
+            <div class="evidence-value">{value}</div>
+            <div class="evidence-note">{note}</div>
+        </div>
+        """
+    html += "</div>"
+    st.markdown(html, unsafe_allow_html=True)
+
+
+def top_feature_drivers_card(perm_df):
+    if perm_df is None or len(perm_df) == 0:
+        return
+
+    top_names = [
+        "Hot Water Efficiency",
+        "Low-Efficiency Heating",
+        "Insulation Quality",
+        "Main Heating Efficiency",
+        "Built Form",
+    ]
+
+    html = """
+    <div class="driver-wrap">
+        <div class="driver-title">Top Feature Drivers</div>
+        <div class="driver-sub">
+            These drivers summarise the strongest model-level signals and connect the feature-importance results back to the diagnostic findings.
+        </div>
+        <div class="driver-list">
+    """
+
+    for i, name in enumerate(top_names, 1):
+        html += f"""
+        <div class="driver-pill">
+            <div class="driver-rank">#{i}</div>
+            <div class="driver-name">{name}</div>
+        </div>
+        """
+
+    html += "</div></div>"
+    st.markdown(html, unsafe_allow_html=True)
+
+
+def advanced_evaluation_panel():
+    imbalance_df = load_table("imbalance")
+    tuning_df = load_table("tuned_test")
+    ablation_df = load_table("ablation")
+
+    st.markdown("### Advanced Evaluation Evidence")
+
+    cards = [
+        (
+            "Class Imbalance",
+            "0.6896",
+            "Best Macro F1 from Random Forest Balanced, showing that class weighting improves rare-class sensitivity."
+        ),
+        (
+            "Tuned Logistic Regression",
+            "0.6709",
+            "Test Macro F1 after compact 3-fold GridSearchCV tuning."
+        ),
+        (
+            "Feature Engineering",
+            "+0.0063",
+            "Macro F1 gain from using all engineered features compared with removing them."
+        ),
+    ]
+    evidence_cards(cards)
+
+    with st.expander("View supporting evaluation tables"):
+        c1, c2 = st.columns(2)
+        with c1:
+            if imbalance_df is not None:
+                st.markdown("**Class-weight sensitivity results**")
+                st.dataframe(imbalance_df, width="stretch", hide_index=True)
+            if tuning_df is not None:
+                st.markdown("**Tuned Logistic Regression test result**")
+                st.dataframe(tuning_df, width="stretch", hide_index=True)
+        with c2:
+            if ablation_df is not None:
+                st.markdown("**Feature ablation results**")
+                st.dataframe(ablation_df, width="stretch", hide_index=True)
+
+    insight_box(
+        "These extra checks address class imbalance, hyperparameter tuning and engineered-feature validation. "
+        "They strengthen the predictive evidence beyond a single untuned train/test split."
+    )
+
+
+def recommendation_evidence_panel():
+    rec_df = load_table("recommendation_evidence")
+    st.markdown("### Quantified Recommendation Evidence")
+
+    evidence_cards([
+        ("Pre-1950 Homes", "-1.33", "Largest rating-score gap; strong case for whole-house retrofit assessment."),
+        ("Poor Wall Efficiency", "-1.28", "Major fabric-efficiency gap; supports wall insulation prioritisation."),
+        ("Poor Roof Efficiency", "-1.17", "Large gap; supports loft and roof insulation targeting."),
+    ])
+
+    if rec_df is not None:
+        st.dataframe(rec_df, width="stretch", hide_index=True)
+
+    success_box(
+        "The recommendations are now quantified rather than generic: priority groups are linked to observed rating-score gaps."
+    )
+
+
+def retrofit_priority_score(age_group, wall_efficiency, roof_efficiency, heating_efficiency, built_form):
+    score = 0.0
+    drivers = []
+    actions = []
+
+    age_text = str(age_group).lower()
+    wall_text = str(wall_efficiency).lower()
+    roof_text = str(roof_efficiency).lower()
+    heating_text = str(heating_efficiency).lower()
+    built_text = str(built_form).lower()
+
+    if any(term in age_text for term in ["pre-1900", "1900", "1930", "1950", "pre-1950"]):
+        score += 1.33
+        drivers.append("Older construction age")
+        actions.append("Whole-house retrofit assessment")
+
+    if "poor" in wall_text:
+        score += 1.28
+        drivers.append("Poor wall efficiency")
+        actions.append("Wall insulation / heat-loss review")
+
+    if "poor" in roof_text:
+        score += 1.17
+        drivers.append("Poor roof efficiency")
+        actions.append("Loft or roof insulation")
+
+    if "poor" in heating_text:
+        score += 0.76
+        drivers.append("Poor main heating efficiency")
+        actions.append("Heating upgrade and controls review")
+
+    if any(term in built_text for term in ["detached", "semi-detached", "exposed"]):
+        score += 0.35
+        drivers.append("Detached or exposed built form")
+        actions.append("Fabric-first heat-loss reduction")
+
+    if score >= 3.5:
+        priority = "Very High"
+    elif score >= 2.4:
+        priority = "High"
+    elif score >= 1.2:
+        priority = "Moderate"
+    else:
+        priority = "Lower"
+
+    return round(score, 2), priority, drivers, actions
+
+
+def render_retrofit_explorer(df):
+    force_light_dropdowns()
+    section(
+        "Decision Support",
+        "Retrofit Scenario Explorer",
+        "A transparent scenario-based tool that converts quantified findings into retrofit priority guidance."
+    )
+
+    st.markdown(
+        """
+        <div class="retrofit-hero">
+            <div class="retrofit-hero-title">Scenario-Based Retrofit Priority</div>
+            <div class="retrofit-hero-text">
+                Select a property profile to estimate retrofit priority using the strongest quantified findings from the notebook.
+                The score is based on observed rating-score gaps for age, wall efficiency, roof efficiency, heating efficiency and built form.
+            </div>
+        </div>
+
+        <div class="retrofit-warning">
+            This is not a formal EPC calculator and does not replace an official EPC assessment.
+            It is a transparent decision-support demonstration based on the notebook's quantified recommendation evidence.
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div class="retrofit-mini-grid">
+            <div class="retrofit-mini">
+                <strong>Evidence Weighted</strong>
+                <span>Priority scores are based on rating-score gaps from the notebook.</span>
+            </div>
+            <div class="retrofit-mini">
+                <strong>Transparent Logic</strong>
+                <span>Every score is linked to visible retrofit drivers.</span>
+            </div>
+            <div class="retrofit-mini">
+                <strong>Decision Support</strong>
+                <span>Designed for planning discussion, not official EPC certification.</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    c1, c2, c3 = st.columns(3)
+
+    age_options = sorted(df["PROPERTY_AGE_GROUP"].dropna().astype(str).unique()) if "PROPERTY_AGE_GROUP" in df.columns else [
+        "Pre-1900", "1900-1929", "1930-1949", "1950-1966", "1967-1975", "1976-1982", "1983-1990", "1991-1995", "1996-2002", "2003 onwards"
+    ]
+    built_options = sorted(df["BUILT_FORM"].dropna().astype(str).unique()) if "BUILT_FORM" in df.columns else ["Detached", "Semi-Detached", "Mid-Terrace", "Enclosed Mid-Terrace"]
+    wall_options = sorted(df["WALLS_ENERGY_EFF"].dropna().astype(str).unique()) if "WALLS_ENERGY_EFF" in df.columns else ["Very Poor", "Poor", "Average", "Good", "Very Good"]
+    roof_options = sorted(df["ROOF_ENERGY_EFF"].dropna().astype(str).unique()) if "ROOF_ENERGY_EFF" in df.columns else ["Very Poor", "Poor", "Average", "Good", "Very Good"]
+    heat_options = sorted(df["MAINHEAT_ENERGY_EFF"].dropna().astype(str).unique()) if "MAINHEAT_ENERGY_EFF" in df.columns else ["Very Poor", "Poor", "Average", "Good", "Very Good"]
+
+    with c1:
+        age_group = st.selectbox("Construction / age group", age_options)
+        built_form = st.selectbox("Built form", built_options)
+
+    with c2:
+        wall_eff = st.selectbox("Wall efficiency", wall_options)
+        roof_eff = st.selectbox("Roof efficiency", roof_options)
+
+    with c3:
+        heat_eff = st.selectbox("Main heating efficiency", heat_options)
+        st.markdown("")
+
+    score, priority, drivers, actions = retrofit_priority_score(
+        age_group, wall_eff, roof_eff, heat_eff, built_form
+    )
+
+    st.markdown(
+        f"""
+        <div class="retrofit-result">
+            <div class="retrofit-result-grid">
+                <div class="retrofit-score-box">
+                    <div class="retrofit-score-label">Priority Score</div>
+                    <div class="retrofit-score">{score}</div>
+                </div>
+                <div>
+                    <div class="retrofit-priority">{priority} Retrofit Priority</div>
+                    <div class="retrofit-small">
+                        <strong>Main drivers:</strong> {", ".join(drivers) if drivers else "No major high-risk drivers selected"}<br>
+                        <strong>Suggested actions:</strong> {", ".join(dict.fromkeys(actions)) if actions else "Maintain monitoring and consider standard efficiency checks"}
+                    </div>
+                </div>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    rules_df = load_table("retrofit_rules")
+    examples_df = load_table("retrofit_examples")
+
+    with st.expander("How the score is derived"):
+        st.markdown(
+            "The score uses evidence-weighted gaps from the notebook's recommendation evidence table. "
+            "Larger observed rating-score gaps contribute more to the priority score."
+        )
+        if rules_df is not None:
+            st.markdown(
+                df_to_light_table(rules_df, numeric_cols=["Evidence Gap"]),
+                unsafe_allow_html=True,
+            )
+
+    with st.expander("Example scenarios from the notebook"):
+        if examples_df is not None:
+            st.markdown(
+                df_to_light_table(examples_df, numeric_cols=["Priority Score"]),
+                unsafe_allow_html=True,
+            )
+
+
+
 # ============================================================
 # SIDEBAR
 # ============================================================
@@ -1115,6 +2253,7 @@ def main():
             "Model Performance",
             "Feature Importance",
             "Recommendations",
+            "Retrofit Explorer",
             "Files",
         ]
     )
@@ -1280,6 +2419,26 @@ def main():
                 config={"displayModeBar": False},
             )
 
+            st.markdown(
+        """
+        <div class="retrofit-mini-grid">
+            <div class="retrofit-mini">
+                <strong>Evidence Weighted</strong>
+                <span>Priority scores are based on rating-score gaps from the notebook.</span>
+            </div>
+            <div class="retrofit-mini">
+                <strong>Transparent Logic</strong>
+                <span>Every score is linked to visible retrofit drivers.</span>
+            </div>
+            <div class="retrofit-mini">
+                <strong>Decision Support</strong>
+                <span>Designed for planning discussion, not official EPC certification.</span>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
             c1, c2, c3 = st.columns(3)
             with c1:
                 st.metric("Highest accuracy", f"{best_acc:.1%}", best_acc_model)
@@ -1422,6 +2581,10 @@ def main():
 
     # TAB 7
     with tabs[6]:
+        render_retrofit_explorer(df)
+
+    # TAB 8
+    with tabs[7]:
         section(
             "Repository Check",
             "Input file check",

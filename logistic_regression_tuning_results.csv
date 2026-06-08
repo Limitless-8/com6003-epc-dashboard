@@ -1,0 +1,7 @@
+params,mean_test_score,std_test_score,rank_test_score
+"{'clf__C': 3.0, 'clf__class_weight': None}",0.6695,0.0104,1
+"{'clf__C': 1.0, 'clf__class_weight': None}",0.6634,0.003,2
+"{'clf__C': 0.3, 'clf__class_weight': None}",0.6439,0.0052,3
+"{'clf__C': 1.0, 'clf__class_weight': 'balanced'}",0.6222,0.003,4
+"{'clf__C': 3.0, 'clf__class_weight': 'balanced'}",0.6195,0.0012,5
+"{'clf__C': 0.3, 'clf__class_weight': 'balanced'}",0.6174,0.0033,6

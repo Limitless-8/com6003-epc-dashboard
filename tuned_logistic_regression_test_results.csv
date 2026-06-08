@@ -1,0 +1,2 @@
+Model,Best Params,CV Macro F1,Test Accuracy,Test Macro F1,Test Weighted F1
+Tuned Logistic Regression,"{'clf__C': 3.0, 'clf__class_weight': None}",0.6695,0.7837,0.6709,0.7813

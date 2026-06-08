@@ -1,0 +1,4 @@
+Model,Accuracy,Macro F1,Weighted F1
+Random Forest Balanced,0.7699,0.6896,0.7712
+Decision Tree Balanced,0.7351,0.64,0.739
+Logistic Regression Balanced,0.7409,0.6256,0.7501
